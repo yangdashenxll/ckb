@@ -47,12 +47,19 @@ impl ChainDB {
         }
     }
 
-    pub fn property_value(&self, col: Col, name: &str) -> Result<Option<String>, Error> {
-        self.db.property_value(col, name)
+    pub fn property_value(&self, name: &str) -> Result<Option<String>, Error> {
+        self.db.property_value(name)
     }
 
-    pub fn property_int_value(&self, col: Col, name: &str) -> Result<Option<u64>, Error> {
-        self.db.property_int_value(col, name)
+    pub fn property_int_value(&self, name: &str) -> Result<Option<u64>, Error> {
+        self.db.property_int_value(name)
+    }
+    pub fn property_value_cf(&self, col: Col, name: &str) -> Result<Option<String>, Error> {
+        self.db.property_value_cf(col, name)
+    }
+
+    pub fn property_int_value_cf(&self, col: Col, name: &str) -> Result<Option<u64>, Error> {
+        self.db.property_int_value_cf(col, name)
     }
 
     pub fn begin_transaction(&self) -> StoreTransaction {

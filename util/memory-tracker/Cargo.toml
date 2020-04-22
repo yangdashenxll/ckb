@@ -7,6 +7,7 @@ license = "MIT"
 
 [dependencies]
 ckb-logger = { path = "../logger" }
+ckb-shared = { path = "../../shared" }
 serde = { version = "1.0", features = ["derive"] }
 
 # TODO Why don't disable this crate by "target.*" in the crates which are dependent on this crate?

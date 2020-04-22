@@ -3,7 +3,9 @@ use crate::snapshot::RocksDBSnapshot;
 use crate::transaction::RocksDBTransaction;
 use crate::{internal_error, Col, DBConfig, Result};
 use ckb_logger::{info, warn};
-use rocksdb::ops::{GetColumnFamilys, GetPinnedCF, GetPropertyCF, IterateCF, OpenCF, SetOptions};
+use rocksdb::ops::{
+    GetColumnFamilys, GetPinnedCF, GetProperty, GetPropertyCF, IterateCF, OpenCF, SetOptions,
+};
 use rocksdb::{
     ffi, ColumnFamily, DBPinnableSlice, IteratorMode, OptimisticTransactionDB,
     OptimisticTransactionOptions, Options, WriteOptions,
@@ -138,14 +140,22 @@ impl RocksDB {
         }
     }
 
-    pub fn property_value(&self, col: Col, name: &str) -> Result<Option<String>> {
+    pub fn property_value(&self, name: &str) -> Result<Option<String>> {
+        self.inner.property_value(name).map_err(internal_error)
+    }
+
+    pub fn property_int_value(&self, name: &str) -> Result<Option<u64>> {
+        self.inner.property_int_value(name).map_err(internal_error)
+    }
+
+    pub fn property_value_cf(&self, col: Col, name: &str) -> Result<Option<String>> {
         let cf = cf_handle(&self.inner, col)?;
         self.inner
             .property_value_cf(cf, name)
             .map_err(internal_error)
     }
 
-    pub fn property_int_value(&self, col: Col, name: &str) -> Result<Option<u64>> {
+    pub fn property_int_value_cf(&self, col: Col, name: &str) -> Result<Option<u64>> {
         let cf = cf_handle(&self.inner, col)?;
         self.inner
             .property_int_value_cf(cf, name)

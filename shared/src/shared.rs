@@ -2,7 +2,7 @@ use crate::{Snapshot, SnapshotMgr};
 use arc_swap::Guard;
 use ckb_chain_spec::consensus::Consensus;
 use ckb_chain_spec::SpecError;
-use ckb_db::{DBConfig, DefaultMigration, Migrations, RocksDB};
+use ckb_db::{Col, DBConfig, DefaultMigration, Migrations, RocksDB};
 use ckb_error::{Error, InternalErrorKind};
 use ckb_notify::{Config as NotifyConfig, NotifyController, NotifyService};
 use ckb_proposal_table::{ProposalTable, ProposalView};
@@ -199,6 +199,23 @@ impl Shared {
 
     pub fn store(&self) -> &ChainDB {
         &self.store
+    }
+
+    pub fn columns() -> &'static [Col] {
+        &[
+            ckb_store::COLUMN_INDEX,
+            ckb_store::COLUMN_BLOCK_HEADER,
+            ckb_store::COLUMN_BLOCK_BODY,
+            ckb_store::COLUMN_BLOCK_UNCLE,
+            ckb_store::COLUMN_META,
+            ckb_store::COLUMN_TRANSACTION_INFO,
+            ckb_store::COLUMN_BLOCK_EXT,
+            ckb_store::COLUMN_BLOCK_PROPOSAL_IDS,
+            ckb_store::COLUMN_BLOCK_EPOCH,
+            ckb_store::COLUMN_EPOCH,
+            ckb_store::COLUMN_CELL_SET,
+            ckb_store::COLUMN_UNCLES,
+        ]
     }
 }
 
