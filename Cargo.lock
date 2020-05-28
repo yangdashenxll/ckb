@@ -147,6 +147,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f59bbe95d4e52a6398ec21238d31577f2b28a9d86807f06ca59d191d8440d0bb"
 
 [[package]]
+name = "bitcoin_hashes"
+version = "0.7.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b375d62f341cef9cd9e77793ec8f1db3fc9ce2e4d57e982c8fe697a2c16af3b6"
+
+[[package]]
 name = "bitflags"
 version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -951,6 +957,7 @@ dependencies = [
  "ckb-script-data-loader",
  "ckb-types",
  "ckb-util",
+ "golomb-coded-set",
  "lru-cache",
  "serde",
 ]
@@ -965,8 +972,10 @@ dependencies = [
  "ckb-dao",
  "ckb-dao-utils",
  "ckb-error",
+ "ckb-hash",
  "ckb-logger",
  "ckb-network",
+ "ckb-notify",
  "ckb-shared",
  "ckb-store",
  "ckb-test-chain-utils",
@@ -1801,6 +1810,14 @@ dependencies = [
  "log 0.4.8",
  "plain",
  "scroll",
+]
+
+[[package]]
+name = "golomb-coded-set"
+version = "0.1.0"
+source = "git+https://github.com/TheWaWaR/golomb-coded-set#a7dee669ae2b73ead2c69649ca45c17065905558"
+dependencies = [
+ "bitcoin_hashes",
 ]
 
 [[package]]

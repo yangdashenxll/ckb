@@ -7,6 +7,7 @@ mod p2p;
 mod relay;
 mod sync;
 mod tx_pool;
+mod gcs_filter;
 
 pub use alert::*;
 pub use consensus::*;
@@ -17,6 +18,7 @@ pub use p2p::*;
 pub use relay::*;
 pub use sync::*;
 pub use tx_pool::*;
+pub use gcs_filter::*;
 
 use crate::Net;
 use ckb_app_config::CKBAppConfig;
@@ -135,6 +137,14 @@ impl TestProtocol {
         Self {
             id: NetworkProtocol::RELAY.into(),
             protocol_name: "rel".to_string(),
+            supported_versions: vec!["1".to_string()],
+        }
+    }
+
+    pub fn gcs_filter() -> Self {
+        Self {
+            id: NetworkProtocol::GCSFILTER.into(),
+            protocol_name: "gcs".to_string(),
             supported_versions: vec!["1".to_string()],
         }
     }

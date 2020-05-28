@@ -38,6 +38,8 @@ pub const MAX_FRAME_LENGTH_SYNC: usize = 2 * 1024 * 1024;
 // Max message frame length for relay protocol: 4MB
 //   NOTE: update this value when block size limit changed
 pub const MAX_FRAME_LENGTH_RELAY: usize = 4 * 1024 * 1024;
+// Max message frame length for gcs filter protocol: 512KB
+pub const MAX_FRAME_LENGTH_GCSFILTER: usize = 512 * 1024;
 // Max message frame length for time protocol: 1KB
 pub const MAX_FRAME_LENGTH_TIME: usize = 1024;
 // Max message frame length for alert protocol: 128KB

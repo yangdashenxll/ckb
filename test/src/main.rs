@@ -391,6 +391,8 @@ fn all_specs() -> SpecMap {
         Box::new(AvoidDuplicatedProposalsWithUncles),
         Box::new(TemplateTxSelect),
         Box::new(BlockSyncRelayerCollaboration),
+        Box::new(GetGcsFilters),
+        Box::new(GetGcsFilterHashes),
     ];
     specs.into_iter().map(|spec| (spec.name(), spec)).collect()
 }

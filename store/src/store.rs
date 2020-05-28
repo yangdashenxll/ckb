@@ -1,9 +1,9 @@
 use crate::cache::StoreCache;
 use crate::{
     COLUMN_BLOCK_BODY, COLUMN_BLOCK_EPOCH, COLUMN_BLOCK_EXT, COLUMN_BLOCK_HEADER,
-    COLUMN_BLOCK_PROPOSAL_IDS, COLUMN_BLOCK_UNCLE, COLUMN_CELL_SET, COLUMN_EPOCH, COLUMN_INDEX,
-    COLUMN_META, COLUMN_TRANSACTION_INFO, COLUMN_UNCLES, META_CURRENT_EPOCH_KEY,
-    META_TIP_HEADER_KEY,
+    COLUMN_BLOCK_PROPOSAL_IDS, COLUMN_BLOCK_UNCLE, COLUMN_CELL_SET, COLUMN_EPOCH,
+    COLUMN_GCS_FILTER, COLUMN_INDEX, COLUMN_META, COLUMN_TRANSACTION_INFO, COLUMN_UNCLES,
+    META_CURRENT_EPOCH_KEY, META_TIP_HEADER_KEY,
 };
 use ckb_chain_spec::consensus::Consensus;
 use ckb_db::{
@@ -191,6 +191,11 @@ pub trait ChainStore<'a>: Send + Sync + Sized {
     fn get_block_number(&'a self, hash: &packed::Byte32) -> Option<BlockNumber> {
         self.get(COLUMN_INDEX, hash.as_slice())
             .map(|raw| packed::Uint64Reader::from_slice_should_be_ok(&raw.as_ref()[..]).unpack())
+    }
+
+    fn get_gcs_filter(&'a self, hash: &packed::Byte32) -> Option<Vec<u8>> {
+        self.get(COLUMN_GCS_FILTER, hash.as_slice())
+            .map(|raw| raw.as_ref().into())
     }
 
     fn is_main_chain(&'a self, hash: &packed::Byte32) -> bool {
