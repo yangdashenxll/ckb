@@ -140,6 +140,10 @@ impl RocksDB {
         }
     }
 
+    pub fn get_inner(&self) -> &OptimisticTransactionDB {
+        &self.inner
+    }
+
     pub fn property_value(&self, name: &str) -> Result<Option<String>> {
         self.inner.property_value(name).map_err(internal_error)
     }

@@ -622,7 +622,7 @@ name = "ckb-memory-tracker"
 version = "0.32.0-pre"
 dependencies = [
  "ckb-logger",
- "ckb-shared",
+ "ckb-rocksdb",
  "futures 0.3.4",
  "heim",
  "jemalloc-ctl",

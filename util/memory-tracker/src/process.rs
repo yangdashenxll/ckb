@@ -6,7 +6,10 @@ use futures::executor::block_on;
 use heim::units::information::byte;
 use jemalloc_ctl::{epoch, stats};
 
-use crate::{rocksdb::TrackRocksDBMemory, utils::HumanReadableSize};
+use crate::{rocksdb::gather_memory_stats, utils::HumanReadableSize};
+use rocksdb::ops::{
+    GetColumnFamilys, GetProperty, GetPropertyCF
+};
 
 macro_rules! je_mib {
     ($key:ty) => {
@@ -30,7 +33,10 @@ macro_rules! mib_read {
     };
 }
 
-pub fn track_current_process(interval: u64, shared_opt: Option<Shared>) {
+pub fn track_current_process<DB: GetProperty + GetPropertyCF + GetColumnFamilys>(
+    interval: u64,
+    db: Option<&DB>,
+) {
     if interval == 0 {
         info!("track current process: disable");
     } else {
@@ -75,8 +81,8 @@ pub fn track_current_process(interval: u64, shared_opt: Option<Shared>) {
                             let retained = mib_read!(retained);
                             let metadata = mib_read!(metadata);
 
-                            if let Some(rocksdb_tracker) = shared_opt.clone() {
-                                let stats = rocksdb_tracker.gather_memory_stats();
+                            if let Some(db) = db {
+                                let stats = gather_memory_stats(db);
                                 debug!(
                                     "CurrentProcess {{ \
                                         pid: {}, rss: {}, virt: {}, \

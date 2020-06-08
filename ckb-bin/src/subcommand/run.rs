@@ -50,7 +50,7 @@ pub fn run(args: RunArgs, version: Version) -> Result<(), ExitCode> {
 
     ckb_memory_tracker::track_current_process(
         args.config.memory_tracker.interval,
-        Some(shared.clone()),
+        Some(shared.store().get_db().get_inner()),
     );
 
     let chain_service = ChainService::new(shared.clone(), table);

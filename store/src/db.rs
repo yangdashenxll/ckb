@@ -76,6 +76,10 @@ impl ChainDB {
         }
     }
 
+    pub fn get_db(&self) -> &RocksDB {
+        &self.db
+    }
+
     pub fn init(&self, consensus: &Consensus) -> Result<(), Error> {
         let genesis = consensus.genesis_block();
         let epoch = consensus.genesis_epoch_ext();

@@ -24,9 +24,8 @@ mod process;
 #[cfg(not(all(not(target_env = "msvc"), not(target_os = "macos"))))]
 mod process {
     use ckb_logger::info;
-    use ckb_shared::shared::Shared;
 
-    pub fn track_current_process(_: u64, _: Option<Shared>) {
+    pub fn track_current_process<DB>(_: u64, _: Option<DB>) {
         info!("track current process: unsupported");
     }
 }
