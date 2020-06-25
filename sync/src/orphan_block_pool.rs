@@ -64,6 +64,11 @@ impl OrphanBlockPool {
                 .and_then(|value| value.get(hash).cloned())
         })
     }
+
+    pub fn shrink_to_fit(&self) {
+        self.blocks.write().shrink_to_fit();
+        self.parents.write().shrink_to_fit();
+    }
 }
 
 #[cfg(test)]

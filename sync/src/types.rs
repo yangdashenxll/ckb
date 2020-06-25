@@ -1457,6 +1457,12 @@ impl SyncState {
             }
         }
     }
+
+    pub fn shrink_to_fit(&self) {
+        self.header_map.write().shrink_to_fit();
+        self.block_status_map.lock().shrink_to_fit();
+        self.orphan_block_pool.shrink_to_fit();
+    }
 }
 
 /** ActiveChain captures a point-in-time view of indexed chain of blocks. */

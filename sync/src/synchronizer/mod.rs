@@ -36,6 +36,7 @@ pub const SEND_GET_HEADERS_TOKEN: u64 = 0;
 pub const IBD_BLOCK_FETCH_TOKEN: u64 = 1;
 pub const NOT_IBD_BLOCK_FETCH_TOKEN: u64 = 2;
 pub const TIMEOUT_EVICTION_TOKEN: u64 = 3;
+pub const MEMORY_SHRINK_TOKEN: u64 = 4;
 pub const NO_PEER_CHECK_TOKEN: u64 = 255;
 
 const SYNC_NOTIFY_INTERVAL: Duration = Duration::from_millis(200);
@@ -547,6 +548,8 @@ impl CKBProtocolHandler for Synchronizer {
             .expect("set_notify at init is ok");
         nc.set_notify(Duration::from_secs(2), NO_PEER_CHECK_TOKEN)
             .expect("set_notify at init is ok");
+        nc.set_notify(Duration::from_secs(30), MEMORY_SHRINK_TOKEN)
+            .expect("set_notify at init is ok");
     }
 
     fn received(
@@ -653,6 +656,9 @@ impl CKBProtocolHandler for Synchronizer {
                 }
                 TIMEOUT_EVICTION_TOKEN => {
                     self.eviction(nc.as_ref());
+                }
+                MEMORY_SHRINK_TOKEN => {
+                    self.shared().state().shrink_to_fit();
                 }
                 // Here is just for NO_PEER_CHECK_TOKEN token, only handle it when there is no peer.
                 _ => {}
