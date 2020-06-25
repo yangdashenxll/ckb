@@ -6,7 +6,7 @@ use ckb_app_config::DBConfig;
 use ckb_logger::{info, warn};
 use rocksdb::ops::{GetColumnFamilys, GetPinnedCF, IterateCF, OpenCF, SetOptions};
 use rocksdb::{
-    ffi, ColumnFamily, DBPinnableSlice, IteratorMode, OptimisticTransactionDB,
+    ffi, ColumnFamily, ColumnFamilyDescriptor, DBPinnableSlice, IteratorMode, OptimisticTransactionDB,
     OptimisticTransactionOptions, Options, WriteOptions,
 };
 use std::sync::Arc;
@@ -28,18 +28,33 @@ impl RocksDB {
         opts.create_if_missing(false);
         opts.create_missing_column_families(true);
 
-        let cfnames: Vec<_> = (0..columns).map(|c| c.to_string()).collect();
-        let cf_options: Vec<&str> = cfnames.iter().map(|n| n as &str).collect();
+        // let cfnames: Vec<_> = (0..columns).map(|c| c.to_string()).collect();
+        // let cf_options: Vec<&str> = cfnames.iter().map(|n| n as &str).collect();
+
+        let cfs = (0..columns)
+            .into_iter()
+            .map(|c| {
+                let mut opt = Options::default();
+                opt.set_write_buffer_size(16000000);
+                ColumnFamilyDescriptor::new(c.to_string().as_ref() as &str, opt)
+            }).collect::<Vec<_>>();
 
         let db =
-            OptimisticTransactionDB::open_cf(&opts, &config.path, &cf_options).or_else(|err| {
+            OptimisticTransactionDB::open_cf_descriptors(&opts, &config.path, cfs).or_else(|err| {
                 let err_str = err.as_ref();
                 if err_str.starts_with("Invalid argument:")
                     && err_str.ends_with("does not exist (create_if_missing is false)")
                 {
                     info!("Initialize a new database");
+                    let cfs = (0..columns)
+                    .into_iter()
+                    .map(|c| {
+                        let mut opt = Options::default();
+                        opt.set_write_buffer_size(16000000);
+                        ColumnFamilyDescriptor::new(c.to_string().as_ref() as &str, opt)
+                    }).collect::<Vec<_>>();
                     opts.create_if_missing(true);
-                    let db = OptimisticTransactionDB::open_cf(&opts, &config.path, &cf_options)
+                    let db = OptimisticTransactionDB::open_cf_descriptors(&opts, &config.path, cfs)
                         .map_err(|err| {
                             internal_error(format!(
                                 "failed to open a new created database: {}",
@@ -56,7 +71,14 @@ impl RocksDB {
                         internal_error(format!("failed to repair the database: {}", err))
                     })?;
                     warn!("Opening the repaired rocksdb ...");
-                    OptimisticTransactionDB::open_cf(&opts, &config.path, &cf_options).map_err(
+                    let cfs = (0..columns)
+                    .into_iter()
+                    .map(|c| {
+                        let mut opt = Options::default();
+                        opt.set_write_buffer_size(16000000);
+                        ColumnFamilyDescriptor::new(c.to_string().as_ref() as &str, opt)
+                    }).collect::<Vec<_>>();
+                    OptimisticTransactionDB::open_cf_descriptors(&opts, &config.path, cfs).map_err(
                         |err| {
                             internal_error(format!("failed to open the repaired database: {}", err))
                         },
