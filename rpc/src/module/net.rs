@@ -33,6 +33,10 @@ pub trait NetworkRpc {
         absolute: Option<bool>,
         reason: Option<String>,
     ) -> Result<()>;
+
+    // curl -d '{"id": 2, "jsonrpc": "2.0", "method":"set_network_active","params": [false]}' -H 'content-type:application/json' 'http://localhost:8114'
+    #[rpc(name = "set_network_active")]
+    fn set_network_active(&self, state: bool) -> Result<()>;
 }
 
 pub(crate) struct NetworkRpcImpl {
@@ -44,6 +48,7 @@ impl NetworkRpc for NetworkRpcImpl {
         Ok(LocalNode {
             version: self.network_controller.version().to_owned(),
             node_id: self.network_controller.node_id(),
+            is_active: self.network_controller.is_active(),
             addresses: self
                 .network_controller
                 .public_urls(MAX_ADDRS)
@@ -150,6 +155,11 @@ impl NetworkRpc for NetworkRpcImpl {
                 ))
             }
         }
+        Ok(())
+    }
+
+    fn set_network_active(&self, state: bool) -> Result<()> {
+        self.network_controller.set_active(state);
         Ok(())
     }
 }

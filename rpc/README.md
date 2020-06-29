@@ -47,6 +47,7 @@ Subscriptions require a full duplex connection. CKB offers such connections in t
     *   [`get_peers`](#get_peers)
     *   [`get_banned_addresses`](#get_banned_addresses)
     *   [`set_ban`](#set_ban)
+    *   [`set_network_active`](#set_network_active)
 *   [`Pool`](#pool)
     *   [`send_transaction`](#send_transaction)
     *   [`tx_pool_info`](#tx_pool_info)
@@ -1867,6 +1868,7 @@ http://localhost:8114
                 "score": "0x1"
             }
         ],
+        "is_active": true,
         "node_id": "QmTRHCdrRtgUzYLNCin69zEvPvLYdxUZLLfLYyHVY3DZAS",
         "version": "0.0.0"
     }
@@ -1986,6 +1988,38 @@ echo '{
         "0x1ac89236180",
         true,
         "set_ban example"
+    ]
+}' \
+| tr -d '\n' \
+| curl -H 'content-type: application/json' -d @- \
+http://localhost:8114
+```
+
+```json
+{
+    "id": 2,
+    "jsonrpc": "2.0",
+    "result": null
+}
+```
+
+### `set_network_active`
+
+Disable/enable all p2p network activity
+
+#### Parameters
+
+    state - true to enable networking, false to disable
+
+#### Examples
+
+```bash
+echo '{
+    "id": 2,
+    "jsonrpc": "2.0",
+    "method": "set_network_active",
+    "params": [
+        false
     ]
 }' \
 | tr -d '\n' \

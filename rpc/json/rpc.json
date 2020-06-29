@@ -328,6 +328,7 @@
                     "score": "0x1"
                 }
             ],
+            "is_active": true,
             "node_id": "QmTRHCdrRtgUzYLNCin69zEvPvLYdxUZLLfLYyHVY3DZAS",
             "version": "0.0.0"
         },
@@ -412,6 +413,21 @@
                 "reason": "Ban reason, optional parameter"
             }
         ]
+    },
+    {
+        "description": "Disable/enable all p2p network activity",
+        "method": "set_network_active",
+        "module": "net",
+        "params": [
+            false
+        ],
+        "result": null,
+        "types": [
+            {
+                "state": "true to enable networking, false to disable"
+            }
+        ],
+        "skip": true
     },
     {
         "description": "Return state info of blockchain",
